@@ -81,10 +81,10 @@ Redis stays below 11 % CPU — it is not a bottleneck at this load level.
 
 | File | Description |
 |------|-------------|
-| `linear-stdout.txt` / `linear.csv` | k6 output for linear scenario |
-| `parallel-stdout.txt` / `parallel.csv` | k6 output for parallel scenario |
-| `events-stdout.txt` / `events.csv` | k6 output for events scenario |
-| `mixed-stdout.txt` / `mixed.csv` | k6 output for mixed scenario |
+| `linear-stdout.txt` / `linear.csv.gz` | k6 output for linear scenario |
+| `parallel-stdout.txt` / `parallel.csv.gz` | k6 output for parallel scenario |
+| `events-stdout.txt` / `events.csv.gz` | k6 output for events scenario |
+| `mixed-stdout.txt` / `mixed.csv.gz` | k6 output for mixed scenario |
 | `docker-stats-linear.txt` | Container CPU/mem at 15-s intervals during linear run |
 | `docker-stats-parallel.txt` | Container CPU/mem at 15-s intervals during parallel run |
 | `docker-stats-events.txt` | Container CPU/mem at 15-s intervals during events run |

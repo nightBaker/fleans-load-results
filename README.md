@@ -20,6 +20,7 @@ measured. `#NNN` references are issues and PRs in `nightBaker/fleans`.
 2. Copy the run directory here as `<name>-<YYYY-MM-DD>/` with a `report.md`: hardware, the Fleans
    commit, the commands, the tables.
 3. Commit `<process>-summary.txt`, `capacity.md` and small text summaries. Leave out the per-rate
-   `<process>-<rate>.*.txt` files and k6 CSVs — they are large and reproducible.
+   `<process>-<rate>.*.txt` files. Commit k6 CSVs gzipped (`gzip -9`, ~40× smaller) — GitHub rejects
+   files over 100 MB.
 4. Add a row above; if the run changes the published numbers, update the Fleans website page
    `reference/load-testing.md` in a Fleans PR.
