@@ -1,0 +1,47 @@
+fleans-core-2  |       .NET Thread Pool execution stalled for 1.0682816s. This can indicate .NET Thread Pool starvation, very long .NET GC pauses, or other runtime or machine pauses.
+fleans-core-2  |       Self-monitoring determined that local health is degraded. Degradation score is 1/8 (lower is better). Complaints: .NET Thread Pool execution stalled for 1.0682816s. This can ind
+fleans-core-2  |       .NET Thread Pool execution stalled for 1.2337415s. This can indicate .NET Thread Pool starvation, very long .NET GC pauses, or other runtime or machine pauses.
+fleans-core-2  |       Self-monitoring determined that local health is degraded. Degradation score is 1/8 (lower is better). Complaints: .NET Thread Pool execution stalled for 1.2337415s. This can ind
+fleans-core-2  |       .NET Runtime Platform stalled for 00:00:02.0885544. Total GC Pause duration during that period: 00:00:01.3922200. We are now using a total of 393MB memory. Collection counts per
+fleans-core-2  |       .NET Thread Pool execution stalled for 1.4193949s. This can indicate .NET Thread Pool starvation, very long .NET GC pauses, or other runtime or machine pauses.
+fleans-core-2  |       Self-monitoring determined that local health is degraded. Degradation score is 1/8 (lower is better). Complaints: .NET Thread Pool execution stalled for 1.4193949s. This can ind
+fleans-core-2  |       .NET Runtime Platform stalled for 00:00:07.7096095. Total GC Pause duration during that period: 00:00:07.3122480. We are now using a total of 698MB memory. Collection counts per
+fleans-core-2  |       .NET Runtime Platform stalled for 00:00:05.6592635. Total GC Pause duration during that period: 00:00:05.0368780. We are now using a total of 695MB memory. Collection counts per
+fleans-core-2  |       .NET Runtime Platform stalled for 00:00:10.6771451. Total GC Pause duration during that period: 00:00:10.6373750. We are now using a total of 691MB memory. Collection counts per
+fleans-core-2  |       .NET Runtime Platform stalled for 00:00:02.7156582. Total GC Pause duration during that period: 00:00:02.7070730. We are now using a total of 695MB memory. Collection counts per
+fleans-core-2  |       .NET Runtime Platform stalled for 00:00:03.9359055. Total GC Pause duration during that period: 00:00:03.9132650. We are now using a total of 700MB memory. Collection counts per
+fleans-core-2  |       .NET Runtime Platform stalled for 00:00:03.0858833. Total GC Pause duration during that period: 00:00:03.0799800. We are now using a total of 690MB memory. Collection counts per
+fleans-core-3  |       .NET Thread Pool execution stalled for 1.5125497s. This can indicate .NET Thread Pool starvation, very long .NET GC pauses, or other runtime or machine pauses.
+fleans-core-3  |       Self-monitoring determined that local health is degraded. Degradation score is 1/8 (lower is better). Complaints: .NET Thread Pool execution stalled for 1.5125497s. This can ind
+fleans-core-1  |       .NET Runtime Platform stalled for 00:00:02.3076741. Total GC Pause duration during that period: 00:00:01.7394060. We are now using a total of 432MB memory. Collection counts per
+fleans-core-1  |       .NET Thread Pool execution stalled for 1.6037344s. This can indicate .NET Thread Pool starvation, very long .NET GC pauses, or other runtime or machine pauses.
+fleans-core-1  |       Self-monitoring determined that local health is degraded. Degradation score is 1/8 (lower is better). Complaints: .NET Thread Pool execution stalled for 1.6037344s. This can ind
+fleans-core-3  |       .NET Runtime Platform stalled for 00:00:02.1103603. Total GC Pause duration during that period: 00:00:01.1191070. We are now using a total of 396MB memory. Collection counts per
+fleans-core-3  |       .NET Thread Pool execution stalled for 1.0452585s. This can indicate .NET Thread Pool starvation, very long .NET GC pauses, or other runtime or machine pauses.
+fleans-core-3  |       Self-monitoring determined that local health is degraded. Degradation score is 1/8 (lower is better). Complaints: .NET Thread Pool execution stalled for 1.0452585s. This can ind
+fleans-core-1  |       .NET Runtime Platform stalled for 00:00:02.2552651. Total GC Pause duration during that period: 00:00:01.3277920. We are now using a total of 408MB memory. Collection counts per
+fleans-core-1  |       .NET Thread Pool execution stalled for 1.2574634s. This can indicate .NET Thread Pool starvation, very long .NET GC pauses, or other runtime or machine pauses.
+fleans-core-1  |       Self-monitoring determined that local health is degraded. Degradation score is 1/8 (lower is better). Complaints: .NET Thread Pool execution stalled for 1.2574634s. This can ind
+fleans-core-3  |       .NET Runtime Platform stalled for 00:00:02.1349823. Total GC Pause duration during that period: 00:00:01.8840820. We are now using a total of 591MB memory. Collection counts per
+fleans-core-3  |       .NET Thread Pool execution stalled for 1.3435359s. This can indicate .NET Thread Pool starvation, very long .NET GC pauses, or other runtime or machine pauses.
+fleans-core-3  |       Self-monitoring determined that local health is degraded. Degradation score is 1/8 (lower is better). Complaints: .NET Thread Pool execution stalled for 1.3435359s. This can ind
+fleans-core-3  |       .NET Runtime Platform stalled for 00:00:02.1506387. Total GC Pause duration during that period: 00:00:02.1274930. We are now using a total of 591MB memory. Collection counts per
+fleans-core-1  |       .NET Thread Pool execution stalled for 1.1029273s. This can indicate .NET Thread Pool starvation, very long .NET GC pauses, or other runtime or machine pauses.
+fleans-core-1  |       Self-monitoring determined that local health is degraded. Degradation score is 1/8 (lower is better). Complaints: .NET Thread Pool execution stalled for 1.1029273s. This can ind
+fleans-core-1  |       .NET Runtime Platform stalled for 00:00:02.5195315. Total GC Pause duration during that period: 00:00:01.5834540. We are now using a total of 443MB memory. Collection counts per
+fleans-core-1  |       .NET Thread Pool execution stalled for 1.4904727s. This can indicate .NET Thread Pool starvation, very long .NET GC pauses, or other runtime or machine pauses.
+fleans-core-1  |       Self-monitoring determined that local health is degraded. Degradation score is 1/8 (lower is better). Complaints: .NET Thread Pool execution stalled for 1.4904727s. This can ind
+fleans-core-1  |       .NET Thread Pool execution stalled for 1.0380784s. This can indicate .NET Thread Pool starvation, very long .NET GC pauses, or other runtime or machine pauses.
+fleans-core-1  |       Self-monitoring determined that local health is degraded. Degradation score is 1/8 (lower is better). Complaints: .NET Thread Pool execution stalled for 1.0380784s. This can ind
+fleans-core-1  |       .NET Runtime Platform stalled for 00:00:02.6125823. Total GC Pause duration during that period: 00:00:01.6503510. We are now using a total of 412MB memory. Collection counts per
+fleans-core-1  |       .NET Thread Pool execution stalled for 1.5227577s. This can indicate .NET Thread Pool starvation, very long .NET GC pauses, or other runtime or machine pauses.
+fleans-core-1  |       Self-monitoring determined that local health is degraded. Degradation score is 1/8 (lower is better). Complaints: .NET Thread Pool execution stalled for 1.5227577s. This can ind
+fleans-core-1  |       .NET Runtime Platform stalled for 00:00:08.3226804. Total GC Pause duration during that period: 00:00:07.7618360. We are now using a total of 613MB memory. Collection counts per
+fleans-core-1  |       .NET Thread Pool execution stalled for 7.7467085s. This can indicate .NET Thread Pool starvation, very long .NET GC pauses, or other runtime or machine pauses.
+fleans-core-1  |       .NET Thread Pool execution stalled for 7.7467085s. This can indicate .NET Thread Pool starvation, very long .NET GC pauses, or other runtime or machine pauses.
+fleans-core-1  |       .NET Runtime Platform stalled for 00:00:06.2434119. Total GC Pause duration during that period: 00:00:05.6827610. We are now using a total of 713MB memory. Collection counts per
+fleans-core-1  |       .NET Runtime Platform stalled for 00:00:04.7856252. Total GC Pause duration during that period: 00:00:04.6039050. We are now using a total of 729MB memory. Collection counts per
+fleans-core-1  |       .NET Runtime Platform stalled for 00:00:09.9903900. Total GC Pause duration during that period: 00:00:09.9659640. We are now using a total of 729MB memory. Collection counts per
+fleans-core-1  |       .NET Thread Pool execution stalled for 42.0778931s. This can indicate .NET Thread Pool starvation, very long .NET GC pauses, or other runtime or machine pauses.
+fleans-core-1  |       .NET Thread Pool execution stalled for 42.0778931s. This can indicate .NET Thread Pool starvation, very long .NET GC pauses, or other runtime or machine pauses.
+fleans-core-1  |       .NET Runtime Platform stalled for 00:00:06.0163704. Total GC Pause duration during that period: 00:00:05.9687790. We are now using a total of 729MB memory. Collection counts per
