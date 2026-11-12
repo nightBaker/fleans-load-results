@@ -1,0 +1,30 @@
+     execution: local
+        script: scripts/timers-1m.js
+        output: -
+     scenarios: (100.00%) 1 scenario, 1000 max VUs, 3m50s max duration (incl. graceful stop):
+              * arm: 300.00 iterations/s for 3m20s (maxVUs: 30-1000, gracefulStop: 30s)
+time="2026-11-12T21:06:43+05:00" level=info msg="timers-1m: arming 60000 timers at 300/s for 200s; due 2026-11-12T16:12:01.257Z … +59 s" source=console
+time="2026-11-12T21:10:03+05:00" level=info msg="timers-1m: timers fall due until 2026-11-12T16:13:01.257Z. Wait ~1 minute past it, then run scripts/timers-1m-lag.sql against the fleans database (see tests/load/README.md § timers-1m)." source=console
+     ✗ timer instance start: status 200
+      ↳  99% — ✓ 59464 / ✗ 430
+     checks.........................: 99.28% 59464 out of 59894
+     data_received..................: 17 MB  84 kB/s
+     data_sent......................: 11 MB  53 kB/s
+     dropped_iterations.............: 106    0.525086/s
+     http_req_blocked...............: avg=6.5µs     min=1µs      med=4µs     max=5.15ms   p(90)=8µs     p(95)=9µs    
+     http_req_connecting............: avg=1.01µs    min=0s       med=0s      max=4.07ms   p(90)=0s      p(95)=0s     
+     http_req_duration..............: avg=24.44ms   min=416µs    med=14.27ms max=1.41s    p(90)=29.82ms p(95)=49.35ms
+   ✓ http_req_failed................: 0.71%  430 out of 59954
+     http_req_receiving.............: avg=46.92µs   min=6µs      med=33µs    max=14.82ms  p(90)=69µs    p(95)=85µs   
+     http_req_sending...............: avg=20.95µs   min=3µs      med=15µs    max=6.28ms   p(90)=28µs    p(95)=33µs   
+     http_req_tls_handshaking.......: avg=0s        min=0s       med=0s      max=0s       p(90)=0s      p(95)=0s     
+     http_req_waiting...............: avg=24.37ms   min=376µs    med=14.21ms max=1.41s    p(90)=29.73ms p(95)=49.24ms
+     http_reqs......................: 59954  296.990527/s
+     iteration_duration.............: avg=24.65ms   min=531.95µs med=14.46ms max=1.41s    p(90)=30.11ms p(95)=49.61ms
+     iterations.....................: 59894  296.693308/s
+     timers_armed...................: 59464  294.563243/s
+   ✓ timers_armed_late..............: 0.00%  0 out of 59894
+     vus............................: 35     min=0              max=96 
+     vus_max........................: 130    min=30             max=130
+     workflow_start_duration........: avg=24.441114 min=0.416    med=14.276  max=1419.314 p(90)=29.8422 p(95)=49.3547
+arm  ✓ [ 100% ] 0000/0130 VUs  3m20s  300.00 iters/s

@@ -1,0 +1,32 @@
+     execution: local
+        script: scripts/timers-1m.js
+        output: -
+     scenarios: (100.00%) 1 scenario, 1000 max VUs, 8m50s max duration (incl. graceful stop):
+              * arm: 2000.00 iterations/s for 8m20s (maxVUs: 200-1000, gracefulStop: 30s)
+time="2026-11-12T20:50:51+05:00" level=info msg="timers-1m: arming 1000000 timers at 2000/s for 500s; due 2026-11-12T16:01:08.718Z … +59 s" source=console
+time="2026-11-12T20:59:11+05:00" level=info msg="timers-1m: timers fall due until 2026-11-12T16:02:08.718Z. Wait ~1 minute past it, then run scripts/timers-1m-lag.sql against the fleans database (see tests/load/README.md § timers-1m)." source=console
+arm  ✓ [ 100% ] 0000/0400 VUs  8m20s  2000.00 iters/s
+     ✗ timer instance start: status 200
+      ↳  16% — ✓ 160951 / ✗ 838562
+     checks.........................: 16.10% 160951 out of 999513
+     data_received..................: 282 MB 561 kB/s
+     data_sent......................: 177 MB 352 kB/s
+     dropped_iterations.............: 488    0.970858/s
+     http_req_blocked...............: avg=3.58µs    min=0s       med=2µs      max=5.58ms   p(90)=5µs      p(95)=7µs     
+     http_req_connecting............: avg=128ns     min=0s       med=0s       max=5.48ms   p(90)=0s       p(95)=0s      
+     http_req_duration..............: avg=30.14ms   min=295µs    med=5.23ms   max=2.43s    p(90)=96.03ms  p(95)=154.54ms
+   ✗ http_req_failed................: 83.89% 838562 out of 999573
+     http_req_receiving.............: avg=26.99µs   min=5µs      med=15µs     max=50.72ms  p(90)=54µs     p(95)=75µs    
+     http_req_sending...............: avg=13.91µs   min=2µs      med=8µs      max=55.61ms  p(90)=24µs     p(95)=33µs    
+     http_req_tls_handshaking.......: avg=0s        min=0s       med=0s       max=0s       p(90)=0s       p(95)=0s      
+     http_req_waiting...............: avg=30.1ms    min=281µs    med=5.19ms   max=2.43s    p(90)=96ms     p(95)=154.49ms
+     http_reqs......................: 999573 1988.613108/s
+     iteration_duration.............: avg=30.27ms   min=339.91µs med=5.36ms   max=2.43s    p(90)=96.15ms  p(95)=154.66ms
+     iterations.....................: 999513 1988.49374/s
+     timers_armed...................: 160951 320.205996/s
+   ✓ timers_armed_late..............: 0.00%  0 out of 999513
+     vus............................: 24     min=0                max=364
+     vus_max........................: 400    min=200              max=400
+     workflow_start_duration........: avg=30.146962 min=0.295    med=5.233    max=2430.207 p(90)=96.0368  p(95)=154.5498
+arm  ✓ [ 100% ] 0000/0400 VUs  8m20s  2000.00 iters/s
+time="2026-11-12T20:59:12+05:00" level=error msg="thresholds on metrics 'http_req_failed' have been crossed"
