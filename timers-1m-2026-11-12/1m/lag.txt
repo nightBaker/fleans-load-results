@@ -1,0 +1,28 @@
+== 17:21:32
+ armed  | fired | failed | not_fired | lag_p50_s | lag_p99_s | lag_max_s 
+--------+-------+--------+-----------+-----------+-----------+-----------
+ 829486 |     0 |      0 |    829486 |           |           |          
+(1 row)
+
+reminders|829493
+idx|1239|4703936
+silo|core-e5216582b555-40ef094d878146c5a7e3e404025543d2|3
+silo|core-157a55cf837e-43d6958be7a8478d83f28417e4cd9bc7|3
+silo|core-70ab3fe1ae40-7dc1ba41d6a141c3a7c265b2026447f2|3
+silo|worker-d122b3b238e8-bc1020774aab4e52bc75f91ff25ecf6c|3
+== 17:27:02
+ armed  | fired | failed | not_fired | lag_p50_s | lag_p99_s | lag_max_s 
+--------+-------+--------+-----------+-----------+-----------+-----------
+ 829486 |     0 |      0 |    829486 |           |           |          
+(1 row)
+
+reminders|829493
+idx|1239|4703936
+silo|core-e5216582b555-40ef094d878146c5a7e3e404025543d2|3
+silo|core-157a55cf837e-43d6958be7a8478d83f28417e4cd9bc7|3
+silo|core-70ab3fe1ae40-7dc1ba41d6a141c3a7c265b2026447f2|3
+silo|worker-d122b3b238e8-bc1020774aab4e52bc75f91ff25ecf6c|3
+/fleans-load-fleans-core-1 restarts=0 oom=false running
+/fleans-load-fleans-core-2 restarts=0 oom=false running
+/fleans-load-fleans-core-3 restarts=0 oom=false running
+/fleans-load-fleans-worker-1 restarts=0 oom=false running

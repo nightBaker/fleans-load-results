@@ -7,7 +7,7 @@ measured. `#NNN` references are issues and PRs in `nightBaker/fleans`.
 
 | Run | What it measures |
 |---|---|
-| [`timers-1m-2026-11-12/`](timers-1m-2026-11-12/report.md) | `timers-1m` (#886) on `main` with Postgres reminders: 10 000 timers per minute pass, 60 000 take Core silos down — follow-up #1066 |
+| [`timers-1m-2026-11-12/`](timers-1m-2026-11-12/report.md) | `timers-1m` (#886) on `main` with Postgres reminders: 10 000 timers per minute pass, 60 000 and a full million (829 486 armed, none fired) take Core silos down — follow-up #1066 |
 | [`target-arch-2026-10-24/`](target-arch-2026-10-24/report.md) | Road to 1.0.0 target architecture on a laptop: throughput ceilings, overload and admission control, timers, resource estimate vs Zeebe; scaling matrix in [`scaling-2026-10-24/`](scaling-2026-10-24) |
 | [`local-2026-10-23/`](local-2026-10-23/report.md) | `main` before vs after the first Road-to-1.0 PRs (#888–#898): `long-diverse`, `linear-saturation`, `timers` |
 | [`azure-2026-04-29/`](azure-2026-04-29/report.md) | Azure Container Apps + Azure Load Testing baseline |

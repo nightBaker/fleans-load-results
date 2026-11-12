@@ -3,9 +3,11 @@
 Issue #886: do Orleans reminders on PostgreSQL carry a large number of BPMN timers, or does Fleans
 need the roadmap's sharded timer scheduler? Pass: timer lag p99 < 2 s and no timer lost.
 
-**Verdict: fail on this hardware, and the cause is not the reminder store.** Past ~170 fires/s the
-silos run out of capacity. Orleans then fires every due reminder at once with nothing limiting how
-many run concurrently, and membership declares Core silos dead. Follow-up: #1066 (bound timer delivery).
+**Verdict: fail on this hardware.** The full million was armed at 300/s: 829 491 timers were pending,
+all silos stayed alive, and the reminders database stayed under one core. When they fell due, **none
+fired**: the Core silos sat at their 1 GB limit in back-to-back GC pauses (thread pool stalled up to
+42 s). Below the fire capacity, 10 000 per minute passes with lag p99 0.15 s; 60 000 already fails.
+Follow-up, as the issue asks: #1066 (sharded timer scheduler / bounded timer delivery).
 
 ## Setup
 
@@ -22,6 +24,7 @@ many run concurrently, and membership declares Core silos dead. Follow-up: #1066
 K6_TARGET_URL=http://localhost:80 K6_TIMERS_COUNT=10000   K6_TIMERS_RATE=200 k6 run scripts/timers-1m.js   # 10k/
 K6_TARGET_URL=http://localhost:80 K6_TIMERS_COUNT=60000   K6_TIMERS_RATE=300 k6 run scripts/timers-1m.js   # 60k/
 K6_TARGET_URL=http://localhost:80                                             k6 run scripts/timers-1m.js   # 161k/ (1 M requested)
+K6_TARGET_URL=http://localhost:80                         K6_TIMERS_RATE=300 k6 run scripts/timers-1m.js   # 1m/  (1 M requested)
 docker compose exec -T postgres psql -U postgres -d fleans < scripts/timers-1m-lag.sql
 ```
 
@@ -31,16 +34,24 @@ docker compose exec -T postgres psql -U postgres -d fleans < scripts/timers-1m-l
 |---|---:|---:|---:|---|---|
 | [`10k/`](10k) | 10 000 / 9 923 | ~170/s | **9 923** | **0.030 / 0.148 / 0.352 s** — pass | healthy |
 | [`60k/`](60k) | 60 000 / 59 464 | ~1 000/s | 20 132 four minutes after the due minute | 22.4 / 225 / 268 s (fired ones) | 1 of 3 Core silos declared dead |
-| [`161k/`](161k) | 1 000 000 / 160 951 | ~2 700/s | 1 012, then stalled | 2.0 / 12.3 / 13.3 s (fired ones) | 2 of 3 Core silos and the Worker silo declared dead |
+| [`161k/`](161k) | 1 000 000 / 160 951 (2 000/s) | ~2 700/s | 1 012, then stalled | 2.0 / 12.3 / 13.3 s (fired ones) | 2 of 3 Core silos and the Worker silo declared dead |
+| [`1m/`](1m) | 1 000 000 / **829 486** (300/s, 56 min) | ~13 800/s | **0** eight minutes after the due minute | — | all silos alive, at the 1 GB limit, GC-bound |
 
 Lag is `CompletedAt − due time` from the read model; for the failed runs it covers only the timers that
 fired. `armed` < requested in `10k`/`60k` is k6's `dropped_iterations` at the arrival-rate start plus
 0.7 % 429s.
 
+- **1 M at 300/s ([`1m/`](1m)).** 1 000 107 starts over 56 minutes; 17 % were answered 429, so
+  829 491 instances parked on a timer and 829 493 reminders sat in `postgres-ops`. Arming itself
+  was healthy: Core silos ~100 % CPU on average, reminders-Postgres 30 % (peak 141 %), no silo
+  suspected. During the due minute the reminders database was idle (0–2 % CPU) and the Core and Worker
+  silos ran flat at ~112 % CPU at their memory limit, logging 47 runtime stalls (GC pauses of 3–8 s,
+  thread-pool stalls up to 42 s, [`1m/gc-stalls.txt`](1m/gc-stalls.txt)). Nothing fired, nothing
+  failed, and nobody was declared dead: with every reminder inside `ReminderLoadingWindow` and each
+  fire needing an activation, ~275 000 reminders per silo did not fit next to the instance activations in 1 GB.
 - **1 M could not be armed at 2 000/s.** Admission control (`AdaptiveConcurrencyLimiter`) answered
   84 % of starts with 429 and accepted ~320 starts/s (start p95 155 ms), so 160 951 timers were
-  armed. Arming a full million at that rate takes ~55 minutes; it was not repeated, because 60 000 already
-  fails in the due minute.
+  armed; the `1m/` run repeats it at 300/s.
 - **The reminder path is not the limit.** Reminders-Postgres (`postgres-ops`) averaged 14 % (161k)
   and 93 % (60k) of one core during the due minute, with peaks of 106 % and 221 %. The
   `ix_reminderstable_serviceid_grainhash` index served the range reads (`idx_scan` 450 after the 161k run).
@@ -64,8 +75,8 @@ declared dead instead of only memory saturation.
 
 ## What it means for 1.0
 
-- Pending timers: reminders on Postgres hold them cheaply in memory and in the database. The 1 M
-  pending count itself is not the problem.
+- Pending timers: 829 000 pending timers sat in Postgres and in the silos without trouble while
+  they were far from due. They stop being cheap once they are all inside `ReminderLoadingWindow` and fall due together.
 - Timers falling due together: the fire rate is bounded by engine capacity, like any other start or
   transition. 1 M in one minute is 16 700 fires/s ≈ 170 laptop cores for that minute (see the
   2026-10-24 estimate). What must change is how a burst above capacity behaves. Today it takes silos down;
