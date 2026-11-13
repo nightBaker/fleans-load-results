@@ -231,7 +231,13 @@ From `src/Fleans` on the migration branch, .NET SDK 11.0.100:
 | `FLEANS_KAFKA_TESTS=1 … --filter "FullyQualifiedName~Kafka"` | 10 passed, 0 failed |
 | fleans-plugins `FLEANS_PG_TESTS=1 dotnet test` | 41 + 164 passed, 0 failed |
 
-The Playwright E2E suite (`TestCategory=E2E`) was not run in this session; CI runs it.
+| Playwright E2E, CI filter (`TestCategory=E2E`, no split-roles / auth) | 157 passed, 47 failed, 14 skipped |
+
+All 47 E2E failures wait for bpmn-js to render (`.editor-page[data-editor-ready='true']` 41×,
+`#bpmn-canvas` 6×). `Fleans.Web` loads bpmn-js from `unpkg.com`, which the test host's egress
+proxy refused (403); two of the failing specs, run on the .NET 10 baseline on the same host, fail the
+same way. Every spec that does not need bpmn-js passed. CI, with network access, is the run that
+covers the editor.
 
 ## Caveats
 
