@@ -1,0 +1,16 @@
+fleans-load-nginx-1 0.00% 32.11MiB / 128MiB
+fleans-load-external-worker-2 0.03% 60.03MiB / 256MiB
+fleans-load-external-worker-1 0.04% 58.53MiB / 256MiB
+fleans-load-fleans-worker-1 1.80% 308.4MiB / 512MiB
+fleans-load-fleans-api-1 0.06% 173.9MiB / 512MiB
+fleans-load-fleans-api-2 0.05% 174.4MiB / 512MiB
+fleans-load-fleans-core-2 1.95% 393.8MiB / 1GiB
+fleans-load-fleans-core-3 1.37% 314.4MiB / 1GiB
+fleans-load-fleans-core-1 2.52% 375.1MiB / 1GiB
+fleans-load-postgres-replica-1 0.17% 318.6MiB / 768MiB
+fleans-load-postgres-1 0.04% 451.6MiB / 1.25GiB
+fleans-load-postgres-ops-1 0.01% 246.4MiB / 768MiB
+fleans-load-kafka-1 5.04% 731.1MiB / 1.25GiB
+fleans-load-citus-w1-1 0.16% 524.1MiB / 1.25GiB
+fleans-load-citus-coord-1 6.69% 337MiB / 1.25GiB
+fleans-load-citus-w2-1 0.14% 526.6MiB / 1.25GiB

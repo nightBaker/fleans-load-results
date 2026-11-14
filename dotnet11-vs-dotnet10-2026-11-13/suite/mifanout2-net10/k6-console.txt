@@ -1,0 +1,3 @@
+level=info msg="size=100 id=da5bde0c-ac35-4bb6-bb1c-756d03a873e9 start_ms=3515 delivered_s=1.0 completed_after_delivery_s=1.1" source=console
+level=info msg="size=500 id=6d9e4b30-1e77-4d9b-ac1b-e444bc712f64 start_ms=6879 delivered_s=5.3 completed_after_delivery_s=0.2" source=console
+level=info msg="size=1000 id=3f25a119-70be-409d-b62c-28c25193fad1 start_ms=7544 delivered_s=28.5 completed_after_delivery_s=0.4" source=console
