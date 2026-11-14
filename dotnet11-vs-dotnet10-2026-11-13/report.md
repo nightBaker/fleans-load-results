@@ -29,7 +29,7 @@ and the base image.
 | `timers-1m` 10 000 timers / `signal-fanout` 10 000 / `long-lived` 10 000 waiting | all fired / all received / PASS | all fired / all received / PASS | — |
 | Peak memory, `fleans-core` (per silo) | 361 MiB | 384 MiB | +6 % |
 | Image size, `fleans-api` (compressed) | 167 MB | 181 MB | +14 MB |
-| Correctness: unit + integration / Postgres / Kafka suites | — | 2 111 / 370 / 10 passed, 0 failed | — |
+| Correctness: unit + integration / Postgres / Kafka / E2E (all CI jobs) | — | 2 111 / 370 / 10 / 226 passed, 0 failed (1 E2E flake, passed on rerun) | — |
 
 - **.NET 11 is the better runtime for Fleans on this hardware.** At the same start rate the engine
   processes (Core silos, API, Worker silo, gRPC workers) use **4–17 % less CPU** — the most at
@@ -348,14 +348,13 @@ From `src/Fleans` on the migration branch, .NET SDK 11.0.100:
 | `FLEANS_PG_TESTS=1 dotnet test --filter "TestCategory=Postgres"` | 370 passed, 0 failed |
 | `FLEANS_KAFKA_TESTS=1 … --filter "FullyQualifiedName~Kafka"` | 10 passed, 0 failed |
 | fleans-plugins `FLEANS_PG_TESTS=1 dotnet test` | 41 + 164 passed, 0 failed |
+| Playwright E2E, CI `e2e` job (`TestCategory=E2E`, no split-roles / auth) | 203 passed, 1 failed, 14 skipped; the failure (`OpenInNewTab_StartsTheNewTabsHistoryWithTheProposal`, editor-ready timeout) passed 3 of 3 reruns |
+| Playwright E2E, `e2e-split-roles` (`FLEANS_SPLIT_ROLES=true`), Redis and Kafka streams | 5 passed, 1 skipped — each |
+| Playwright E2E, `e2e-auth` (`FLEANS_E2E_AUTH=true`, Keycloak) | 8 passed, 0 failed |
 
-| Playwright E2E, CI filter (`TestCategory=E2E`, no split-roles / auth) | 157 passed, 47 failed, 14 skipped |
-
-All 47 E2E failures wait for bpmn-js to render (`.editor-page[data-editor-ready='true']` 41×,
-`#bpmn-canvas` 6×). `Fleans.Web` loads bpmn-js from `unpkg.com`, which the test host's egress
-proxy refused (403); two of the failing specs, run on the .NET 10 baseline on the same host, fail the
-same way. Every spec that does not need bpmn-js passed. CI, with network access, is the run that
-covers the editor.
+The first E2E attempt failed every spec that renders a diagram (47): `Fleans.Web` loads bpmn-js from
+`unpkg.com` and bpmn-auto-layout from `cdn.jsdelivr.net`, and the auth specs pull Keycloak from
+`quay.io` — hosts the test environment did not allow. With them allowed, the results above.
 
 ## Caveats
 
