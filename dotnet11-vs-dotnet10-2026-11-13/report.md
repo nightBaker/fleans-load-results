@@ -29,7 +29,7 @@ and the base image.
 | `timers-1m` 10 000 timers / `signal-fanout` 10 000 / `long-lived` 10 000 waiting | all fired / all received / PASS | all fired / all received / PASS | — |
 | Peak memory, `fleans-core` (per silo) | 361 MiB | 384 MiB | +6 % |
 | Image size, `fleans-api` (compressed) | 167 MB | 181 MB | +14 MB |
-| Correctness: unit + integration / Postgres / Kafka / E2E (all CI jobs) | — | 2 111 / 370 / 10 / 226 passed, 0 failed (1 E2E flake, passed on rerun) | — |
+| Correctness: unit + integration / Postgres / Kafka / E2E (all CI jobs) | — | 2 111 / 370 / 10 / 222 passed, 0 failed (1 E2E spec flaked once, passed on 3 reruns) | — |
 
 - **.NET 11 is the better runtime for Fleans on this hardware.** At the same start rate the engine
   processes (Core silos, API, Worker silo, gRPC workers) use **4–17 % less CPU** — the most at
