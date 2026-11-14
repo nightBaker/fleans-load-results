@@ -1,0 +1,2 @@
+level=info msg="signal-fanout: broadcast sent at 2026-11-13T18:38:51.656Z, answered in 1198 ms, DeliveredCount=9324, body={\"deliveredCount\":9324,\"workflowInstanceIds\":null}" source=console
+level=info msg="signal-fanout: run scripts/signal-fanout.sql against the fleans database once the projector has caught up (see tests/load/README.md § signal-fanout)." source=console

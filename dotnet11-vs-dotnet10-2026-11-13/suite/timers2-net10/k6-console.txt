@@ -1,0 +1,2 @@
+level=info msg="timers-1m: arming 10000 timers at 100/s for 100s; due 2026-11-13T18:26:23.209Z … +59 s" source=console
+level=info msg="timers-1m: timers fall due until 2026-11-13T18:27:23.209Z. Wait ~1 minute past it, then run scripts/timers-1m-lag.sql against the fleans database (see tests/load/README.md § timers-1m)." source=console

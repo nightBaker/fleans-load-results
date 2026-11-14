@@ -2,7 +2,9 @@
 
 The same Fleans code, the same load stack and the same scenarios on the .NET 10 and .NET 11 runtimes:
 throughput ladders for the roadmap's headline processes (`linear-10`, `one-task`), the long, diverse
-process (`long-diverse`), memory, startup and image size. The .NET 11 build is the migration in
+process (`long-diverse`), then the rest of the suite — `timers-1m`, `signal-fanout`, `long-lived`,
+`mi-fanout`, the classic `linear` / `parallel` / `events` / `mixed` scripts — and a 30-minute soak at the
+roadmap's 5 + 30 minute method; memory, startup and image size. The .NET 11 build is the migration in
 nightBaker/fleans branch `claude/dotnet-11-migration-load-testing-bnfddd` (`24ec1b7`); the .NET 10
 build is its parent, `main` at `a50fcfe` (release prep v0.13.0). The only difference between the two
 builds is the target framework, the SDK, `Microsoft.AspNetCore.*` / `Microsoft.Extensions.*` 11.0.0
@@ -20,6 +22,11 @@ and the base image.
 | `one-task` at 200 /s offered (past the ceiling) — accepted and completed | 168.9 /s | **179.6 /s** | +6 % |
 | `long-diverse`, 40 VUs, fresh stack — throughput, end-to-end p95 | 12.40 /s, 4.08 s | 12.41 /s, 4.09 s | parity |
 | `long-diverse` — CPU of `fleans-core` | 106 % | **101 %** | −5 % |
+| **Soak**: `linear-10` at 45 /s for 30 min — p99, CPU of the Fleans processes | 0.293 s, 152 % | **0.260 s, 135 %** | −11 % / −11 % |
+| Classic `linear` / `parallel` / `mixed` (500 / 500 / 100 VUs, overload) — instances completed | 19 410 / 19 194 / 19 962 | **21 996 / 22 379 / 22 237** | +13 / +17 / +11 % |
+| Classic `events` (200 VUs, overload) — instances completed | 2 426 | 2 305 | −5 % |
+| `mi-fanout` 1 000 branches — all messages delivered in (r1, r2) | 26.9 s, 28.5 s | **20.2 s, 22.0 s** | −24 % |
+| `timers-1m` 10 000 timers / `signal-fanout` 10 000 / `long-lived` 10 000 waiting | all fired / all received / PASS | all fired / all received / PASS | — |
 | Peak memory, `fleans-core` (per silo) | 361 MiB | 384 MiB | +6 % |
 | Image size, `fleans-api` (compressed) | 167 MB | 181 MB | +14 MB |
 | Correctness: unit + integration / Postgres / Kafka suites | — | 2 111 / 370 / 10 passed, 0 failed | — |
@@ -38,6 +45,13 @@ and the base image.
 - **Memory is about the same**: +6 % peak on Core silos, −4 % on the Worker silo, the API and the
   external worker unchanged. The .NET 11 image is 14 MB larger compressed — the `aspnet:11.0` base
   moved from Ubuntu 24.04 to 26.04.
+- **The rest of the suite agrees and finds no regression.** Over 30 minutes at 45 starts/s
+  (81 000 instances each, 0 failed) .NET 11 used 11 % less CPU in the engine processes, with p99
+  0.260 s against 0.293 s. Under the classic scripts' heavy overload it completed 11–17 % more
+  instances in the same 5 minutes (`events`: −5 %, a single run). Timers, signal broadcasts,
+  long-lived waits and multi-instance fan-out kept every instance, in two rounds each; their latencies
+  are on par or better on .NET 11 (`mi-fanout` delivery −24 %, broadcast answered 683–874 ms against
+  878–1 198 ms).
 - **Startup is unchanged**: the whole stack is healthy in 36–37 s with either runtime.
 - `long-diverse` is a closed-loop scenario dominated by its 1 s timers and client round trips, so its
   throughput is set by the VUs, not the CPU: both runtimes give the same result, with ~5 % less
@@ -82,6 +96,18 @@ Then two more rounds per runtime of `long-diverse` alone on a fresh stack (30 s 
 then 40 VUs for 4 min), because step 3 starts right after the overload step of `one-task`
 ([§ 429s](#429s-at-the-start-of-long-diverse)).
 
+**Rest of the suite** — every scenario on a fresh stack, `net10` then `net11` back to back
+(`scripts/run-suite.sh`), sized for this host by the README's own guidance:
+
+| scenario | settings | rounds |
+|---|---|---:|
+| `timers-1m.js` | `K6_TIMERS_COUNT=10000 K6_TIMERS_RATE=100`, `timers-1m-lag.sql` 4 min after arming | 2 |
+| `signal-fanout.js` | `K6_FANOUT_COUNT=10000 K6_FANOUT_RATE=100 K6_WINDOW_S=60`, linear-10 at 20/s | 2 |
+| `long-lived.js` | `K6_PARK_COUNT=10000 K6_PARK_RATE=100 K6_WINDOW_S=60 K6_WARMUP_S=30`, 20 VUs | 2 |
+| `mi-fanout.js` | `K6_MI_SIZES=100,500,1000` | 2 |
+| `linear.js`, `parallel.js`, `events.js`, `mixed.js` | the scripts' own profiles (500 / 500 / 200 / 40 + 30 + 30 VUs, 1 + 3 + 1 min) | 1 |
+| soak | `throughput-ceiling.sh`, `RATES=45 PROCESS=load-linear-10 PREWARM=5m WARMUP=30s DURATION=30m` | 1 |
+
 Latency of the throughput ladders comes from the read model (`CompletedAt − CreatedAt`, both journal
 timestamps), so neither k6 nor polling adds to it. CPU is the `docker stats` average over the measured
 window, in % of one core, summed over containers (the host has 400 %). "Fleans processes" =
@@ -91,8 +117,10 @@ Kafka and nginx.
 The driver scripts are in [`scripts/`](scripts/): `run-round.sh` (one full round), `run-ld.sh` (the
 isolated `long-diverse` round), `compare.py` / `compare-ld.py` (the tables below, also saved as
 [`tables-throughput-rounds.md`](tables-throughput-rounds.md) and
-[`tables-long-diverse-isolated.md`](tables-long-diverse-isolated.md)). `jslib.k6.io` was unreachable
-from the test host, so `long-diverse.js` ran from a copy whose two `jslib` imports point at local
+[`tables-long-diverse-isolated.md`](tables-long-diverse-isolated.md)), `run-suite.sh` / `compare2.py` for
+the rest of the suite ([`tables-suite.md`](tables-suite.md), raw summaries in [`suite/`](suite/)).
+`jslib.k6.io` was unreachable
+from the test host, so `long-diverse.js`, `events.js` and `long-lived.js` ran from a copy whose two `jslib` imports point at local
 stand-ins (`scripts/k6-utils.js`: `uuidv4` = `crypto.randomUUID`; `scripts/k6-summary.js`: a plain-text
 `textSummary`) and which logs the status of a failed start. The JSON summaries are k6's own.
 
@@ -203,6 +231,96 @@ limit. Retry later."}` and none of them is lost work: the steady state after the
 11.4–12.1 /s on .NET 10. It is a property of the scenario (no back-off after a `429`) and of the
 limiter (no growth while idle), the same on both runtimes.
 
+### Rest of the suite
+
+#### Classic scenarios (`linear`, `parallel`, `events`, `mixed` — the scripts' own VU profiles)
+
+Closed model at the scripts' default VU counts (500 / 500 / 200 / 40+30+30 VUs, 5 min with ramps) — far above this host's ceiling, so the admission limiter answers most starts with `429`; the scenario measures how much work each runtime gets through under that overload. Completed instances and process duration from the read model (`throughput.sql`), CPU = `docker stats` average over the k6 run.
+
+| scenario | runtime | completed | completed /s (peak 10 s) | process p50 / p99 (s) | requests /s | `429` / failed | start p95 (ms) | CPU Fleans / total (%) |
+|---|---|---:|---|---|---:|---:|---:|---|
+| `linear` | .NET 10 | 19410 | 65.0 (121.5) | 0.399 / 1.703 | 2 339 | 97.2 % | 213 | 143 / 255 |
+|  | .NET 11 | 21996 | 73.6 (117.3) | 0.372 / 2.057 | 2 222 | 96.7 % | 232 | 143 / 259 |
+| `parallel` | .NET 10 | 19194 | 64.2 (112.2) | 0.379 / 3.772 | 2 227 | 97.1 % | 241 | 141 / 257 |
+|  | .NET 11 | 22379 | 74.9 (137.5) | 0.216 / 1.150 | 2 296 | 96.8 % | 221 | 145 / 264 |
+| `events` | .NET 10 | 2426 | 8.1 (66.3) | 0.540 / 1.954 | 2 188 | 92.4 % | 196 | 148 / 257 |
+|  | .NET 11 | 2305 | 7.7 (72.1) | 0.424 / 2.960 | 2 225 | 92.2 % | 203 | 146 / 255 |
+| `mixed` | .NET 10 load-events | 2545 | 8.6 (25.3) | 0.451 / 1.676 | 863 | 80.4 % | 238 | 173 / 300 |
+|  | .NET 10 load-linear | 9964 | 33.5 (64.5) | 0.360 / 1.832 |  | | | |
+|  | .NET 10 load-parallel | 7453 | 25.1 (48.3) | 0.217 / 1.092 |  | | | |
+|  | .NET 11 load-events | 2792 | 9.4 (28.2) | 0.460 / 2.036 | 787 | 77.3 % | 243 | 166 / 303 |
+|  | .NET 11 load-linear | 11040 | 37.1 (69.2) | 0.421 / 3.195 |  | | | |
+|  | .NET 11 load-parallel | 8405 | 28.3 (53.7) | 0.251 / 1.621 |  | | | |
+
+#### `timers-1m` (10 000 timers armed at 100 starts/s, due within one minute)
+
+| runtime | armed | fired | failed / not fired | lag p50 / p99 / max (s) | starts answered `429` | CPU Fleans / total (%) |
+|---|---:|---:|---|---|---:|---|
+| r1 net10 | 9388 | 9388 | 0 / 0 | 0.126 / 0.572 / 2.416 | 5.5 % | 79 / 151 |
+| r1 net11 | 9434 | 9434 | 0 / 0 | 0.145 / 0.791 / 2.315 | 5.0 % | 74 / 153 |
+| r2 net10 | 9485 | 9485 | 0 / 0 | 0.136 / 0.477 / 1.563 | 4.4 % | 79 / 155 |
+| r2 net11 | 9377 | 9377 | 0 / 0 | 0.088 / 0.515 / 2.312 | 5.6 % | 71 / 145 |
+
+#### `signal-fanout` (10 000 parked at 100/s, one broadcast, linear-10 at 20/s before / during)
+
+| runtime | parked / received | broadcast answered | delivery spread | linear-10 started before → during | linear-10 duration p99 before → during |
+|---|---|---:|---:|---|---|
+| r1 net10 | 9720 / 9720 | 878 ms | 21.658 s | 1203 → 1199 | 0.418 s → 2.197 s |
+| r1 net11 | 9330 / 9330 | 874 ms | 22.123 s | 1205 → 1196 | 0.125 s → 2.948 s |
+| r2 net10 | 9324 / 9324 | 1198 ms | 22.201 s | 1205 → 1197 | 0.357 s → 3.957 s |
+| r2 net11 | 9433 / 9433 | 683 ms | 17.866 s | 1201 → 1200 | 0.101 s → 1.312 s |
+
+#### `long-lived` (10 000 instances parked on a message, linear-10 with 20 VUs before / after)
+
+| runtime | parked / still waiting | accepted linear-10 starts/s empty → loaded | drop | `429` empty / loaded | result |
+|---|---|---|---:|---|---|
+| r1 net10 | 8866 / 8866 | 151.8 → 149.5 | 1.5 % | 1206 / 0 | PASS |
+| r1 net11 | 9688 / 9688 | 118.8 → 125.7 | -5.8 % | 6729 / 0 | PASS |
+| r2 net10 | 9628 / 9628 | 140.9 → 143.1 | -1.6 % | 10261 / 74 | PASS |
+| r2 net11 | 9741 / 9741 | 133.5 → 144.7 | -8.4 % | 4596 / 0 | PASS |
+
+#### `mi-fanout` (one instance forks N branches, each waits for its own message)
+
+| branches | .NET 10: start answered / all delivered (r1, r2) | .NET 11: start answered / all delivered (r1, r2) | journal batches / events (both) |
+|---:|---|---|---|
+| 100 | 4.3 / 1.3 s, 3.5 / 1.0 s | 3.9 / 1.2 s, 4.1 / 0.6 s | 200 / 1815 |
+| 500 | 7.9 / 6.4 s, 6.9 / 5.3 s | 8.3 / 6.5 s, 5.5 / 4.7 s | 1000 / 9015 |
+| 1000 | 9.1 / 26.9 s, 7.5 / 28.5 s | 8.9 / 20.2 s, 7.7 / 22.0 s | 2000 / 18015 |
+
+#### Soak: `linear-10` at 45 starts/s, 5 min pre-warm + 30 s warm-up + **30 min** measured
+
+| runtime | started | completed | failed / unfinished | completed /s | p50 / p95 / p99 / max (s) | CPU total (%) | Fleans processes (%) | peak MiB core / worker / api |
+|---|---:|---:|---|---:|---|---:|---:|---|
+| net10 | 81001 | 81001 | 0 / 0 | 45.0 | 0.055 / 0.191 / 0.293 / 0.993 | 269.7 | 152 | 229 / 269 / 148 |
+| net11 | 80998 | 80998 | 0 / 0 | 45.0 | 0.049 / 0.162 / 0.260 / 0.946 | 252.9 | 135 | 271 / 252 / 143 |
+
+Notes:
+
+- **Soak** — the cleanest comparison in this report: one fixed, sustainable rate for 30 minutes.
+  Every instance completed in both, .NET 11 with lower latency at every percentile and 11 % less CPU
+  in the Fleans processes (Core 3 silos, API, Worker, gRPC workers); the databases did the same work.
+  Peak Core-silo memory was higher on .NET 11 (271 against 229 MiB), the Worker's lower.
+- **Classic scripts** are a heavy overload here (≈ 2 200 requests/s against a ~65 /s ceiling), so
+  92–97 % of the starts are answered `429` by the admission limiter on both runtimes; what counts is
+  the work that got through. .NET 11 completed more instances in `linear` (+13 %), `parallel` (+17 %)
+  and `mixed` (+11 % over its three processes); `events` (start → wait → message → end) 5 % fewer.
+  `events` saw no correlation miss on either runtime; 2 of 20 260 polls stalled on .NET 11, none
+  of 18 525 on .NET 10. The p99s of overloaded runs swing either way between runs.
+- **timers-1m**: every armed timer fired on both runtimes in both rounds; lag p99 0.57 / 0.48 s
+  (.NET 10) against 0.79 / 0.52 s (.NET 11), p50 0.13 / 0.14 against 0.15 / 0.09 s — within the
+  run-to-run spread, under the scenario's 2 s gate in all four runs.
+- **signal-fanout**: every parked instance received the broadcast; linear-10 kept its start rate during
+  the broadcast in all four runs (−0.1 to −0.8 %). Its p99 during the broadcast was 2.2 / 4.0 s on
+  .NET 10 and 2.9 / 1.3 s on .NET 11.
+- **long-lived**: every parked instance still waiting, PASS in all four runs. linear-10 here is a
+  closed loop of 20 VUs far above the ceiling, so the start rate per window follows the admission
+  limiter (thousands of `429` in some windows on both runtimes) — read it as pass / fail only.
+- **mi-fanout**: the journal is byte-for-byte the same shape on both runtimes (200 / 1 000 / 2 000
+  batches, 1 815 / 9 015 / 18 015 events), and delivering 1 000 branch messages — 1 000 turns of one
+  grain, each rescanning its state — took 24 % less time on .NET 11 in both rounds.
+- `fail` / `crit` log lines: 2 on the Core silos per run on both runtimes (EF's migration-history
+  probe on a fresh database), none elsewhere.
+
 ### Memory
 
 MiB per container (mean of the full rounds; idle = after `setup.js`, peak = highest 5 s sample of the
@@ -241,8 +359,10 @@ covers the editor.
 
 ## Caveats
 
-- One 4-vCPU VM, k6 on the same host, 1-minute windows: the roadmap asks for 5 + 30 minutes on
-  dedicated load generators. Differences under ~5 % are within the round-to-round spread; the CPU
+- One 4-vCPU VM, k6 on the same host. The ladders use 1-minute windows; the 5 + 30 minute method of
+  the roadmap was run once per runtime at 45 /s (the soak), not at every rate, and not on dedicated
+  load generators. The scaled-down `timers-1m` / `signal-fanout` / `long-lived` (10 000 instances, not
+  1 M / 100 000 / 10 M) do not answer those scenarios' capacity questions; they compare the runtimes. Differences under ~5 % are within the round-to-round spread; the CPU
   savings at 30–50 /s (10–17 %) and the p50 improvements are consistent across every round.
 - The .NET 10 baseline is the current release line (10.0.15); .NET 11 is 11.0.0, the first GA
   build. Server GC, no `DOTNET_*` tuning in either.
