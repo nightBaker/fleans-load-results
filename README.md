@@ -7,6 +7,7 @@ measured. `#NNN` references are issues and PRs in `nightBaker/fleans`.
 
 | Run | What it measures |
 |---|---|
+| [`timers-1m-bounded-2026-11-19/`](timers-1m-bounded-2026-11-19/report.md) | `timers-1m` with bounded timer delivery (#1066, 4-vCPU VM): 60 000 due within one minute, `main` vs `Fleans:Timers:DeliveryConcurrency` 32 / 64 / 128, and 10 000 under capacity |
 | [`dotnet11-vs-dotnet10-2026-11-13/`](dotnet11-vs-dotnet10-2026-11-13/report.md) | Same code and stack on .NET 10.0.15 vs .NET 11.0.0 (4-vCPU VM): `linear-10` / `one-task` ladders, `long-diverse`, memory, startup |
 | [`target-arch-2026-10-24/`](target-arch-2026-10-24/report.md) | Road to 1.0.0 target architecture on a laptop: throughput ceilings, overload and admission control, timers, resource estimate vs Zeebe; scaling matrix in [`scaling-2026-10-24/`](scaling-2026-10-24) |
 | [`local-2026-10-23/`](local-2026-10-23/report.md) | `main` before vs after the first Road-to-1.0 PRs (#888–#898): `long-diverse`, `linear-saturation`, `timers` |

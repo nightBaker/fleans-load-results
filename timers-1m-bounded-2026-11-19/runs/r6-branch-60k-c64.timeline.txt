@@ -1,0 +1,29 @@
+2026/11/19 11:56:23 [notice] 24#24: signal process started
+== 11:56:23 arming 60000 at 120/s (branch)
+time="2026-11-19T11:56:26Z" level=info msg="timers-1m: arming 60000 timers at 120/s for 500s; due 2026-11-19T12:06:43.485Z … +59 s" source=console
+time="2026-11-19T12:04:46Z" level=info msg="timers-1m: timers fall due until 2026-11-19T12:07:43.485Z. Wait ~1 minute past it, then run scripts/timers-1m-lag.sql against the fleans database (see tests/load/README.md § timers-1m)." source=console
+    http_req_failed
+    timers_armed_late
+    checks_total.......: 59926  119.02199/s
+    checks_succeeded...: 98.12% 58802 out of 59926
+    checks_failed......: 1.87%  1124 out of 59926
+    timers_armed...................: 58802 116.789558/s
+    timers_armed_late..............: 0.00% 0 out of 59926
+    http_req_failed................: 1.87% 1124 out of 59986
+time="2026-11-19T12:04:47Z" level=error msg="thresholds on metrics 'http_req_failed' have been crossed"
+12:05:22 armed/fired/failed/not_fired/p50/p99/max=[58802 0 0 58802   ] silos active:dead=[4:0] restarts=0 fleans-core-2=434.3MiB fleans-core-1=582.7MiB fleans-core-3=438.2MiB
+12:05:58 armed/fired/failed/not_fired/p50/p99/max=[58802 0 0 58802   ] silos active:dead=[4:0] restarts=0 fleans-core-2=435.3MiB fleans-core-1=583.4MiB fleans-core-3=438.2MiB
+12:06:33 armed/fired/failed/not_fired/p50/p99/max=[58802 0 0 58802   ] silos active:dead=[4:0] restarts=0 fleans-core-2=439.3MiB fleans-core-1=595.2MiB fleans-core-3=443.6MiB
+12:07:17 armed/fired/failed/not_fired/p50/p99/max=[58802 523 0 58279 0.978 2.906 3.215] silos active:dead=[4:0] restarts=0 fleans-core-2=591.9MiB fleans-core-1=637.8MiB fleans-core-3=606.4MiB
+12:07:59 armed/fired/failed/not_fired/p50/p99/max=[58802 5231 0 53571 0.752 4.263 6.173] silos active:dead=[4:0] restarts=0 fleans-core-2=611.8MiB fleans-core-1=655.9MiB fleans-core-3=649.4MiB
+12:08:44 armed/fired/failed/not_fired/p50/p99/max=[58802 19013 0 39789 0.941 60.876 63.605] silos active:dead=[4:0] restarts=0 fleans-core-2=605.1MiB fleans-core-1=570.6MiB fleans-core-3=648.6MiB
+12:09:27 armed/fired/failed/not_fired/p50/p99/max=[58802 31146 0 27656 60.044 120.615 123.710] silos active:dead=[4:0] restarts=0 fleans-core-2=570.1MiB fleans-core-1=574.6MiB fleans-core-3=630.3MiB
+12:10:05 armed/fired/failed/not_fired/p50/p99/max=[58802 42592 0 16210 60.259 180.344 180.750] silos active:dead=[4:0] restarts=0 fleans-core-2=553.3MiB fleans-core-1=580.9MiB fleans-core-3=595.5MiB
+12:10:42 armed/fired/failed/not_fired/p50/p99/max=[58802 49139 0 9663 60.403 180.414 180.750] silos active:dead=[4:0] restarts=0 fleans-core-2=489.4MiB fleans-core-1=496.2MiB fleans-core-3=564MiB
+12:11:23 armed/fired/failed/not_fired/p50/p99/max=[58802 53259 0 5543 60.571 240.248 240.489] silos active:dead=[4:0] restarts=0 fleans-core-2=519.9MiB fleans-core-1=504.7MiB fleans-core-3=554.7MiB
+12:11:59 armed/fired/failed/not_fired/p50/p99/max=[58802 56929 0 1873 120.050 240.670 300.326] silos active:dead=[4:0] restarts=0 fleans-core-2=522MiB fleans-core-1=464.5MiB fleans-core-3=538.4MiB
+12:12:35 armed/fired/failed/not_fired/p50/p99/max=[58802 58291 0 511 120.079 300.136 300.367] silos active:dead=[4:0] restarts=0 fleans-core-2=516.6MiB fleans-core-1=470.6MiB fleans-core-3=526MiB
+12:13:11 armed/fired/failed/not_fired/p50/p99/max=[58802 58637 0 165 120.085 300.142 360.071] silos active:dead=[4:0] restarts=0 fleans-core-2=516MiB fleans-core-1=471.1MiB fleans-core-3=526.3MiB
+12:13:46 armed/fired/failed/not_fired/p50/p99/max=[58802 58787 0 15 120.088 300.169 360.164] silos active:dead=[4:0] restarts=0 fleans-core-2=515.8MiB fleans-core-1=471MiB fleans-core-3=525.8MiB
+12:14:22 armed/fired/failed/not_fired/p50/p99/max=[58802 58802 0 0 120.088 300.172 360.164] silos active:dead=[4:0] restarts=0 fleans-core-2=521.7MiB fleans-core-1=470.9MiB fleans-core-3=525.5MiB
+core log dead/oom lines: 0

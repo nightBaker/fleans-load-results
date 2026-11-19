@@ -1,0 +1,21 @@
+2026/11/19 10:38:22 [notice] 24#24: signal process started
+== 10:38:22 arming 20000 at 100/s (main)
+time="2026-11-19T10:38:25Z" level=info msg="timers-1m: arming 20000 timers at 100/s for 200s; due 2026-11-19T10:43:42.512Z … +59 s" source=console
+time="2026-11-19T10:41:45Z" level=info msg="timers-1m: timers fall due until 2026-11-19T10:44:42.512Z. Wait ~1 minute past it, then run scripts/timers-1m-lag.sql against the fleans database (see tests/load/README.md § timers-1m)." source=console
+    http_req_failed
+    timers_armed_late
+    checks_total.......: 19932  97.991642/s
+    checks_succeeded...: 96.74% 19283 out of 19932
+    checks_failed......: 3.25%  649 out of 19932
+    timers_armed...................: 19283  94.800965/s
+    timers_armed_late..............: 0.00%  0 out of 19932
+    http_req_failed................: 3.24%  649 out of 19992
+time="2026-11-19T10:41:45Z" level=error msg="thresholds on metrics 'http_req_failed' have been crossed"
+10:42:19 armed/fired/failed/not_fired/p50/p99/max=[19283 0 0 19283   ] silos active:dead=[4:0] restarts=0 fleans-core-3=408.7MiB fleans-core-1=334.9MiB fleans-core-2=356.8MiB
+10:42:53 armed/fired/failed/not_fired/p50/p99/max=[19283 0 0 19283   ] silos active:dead=[4:0] restarts=0 fleans-core-3=408.8MiB fleans-core-1=334.9MiB fleans-core-2=357MiB
+10:43:26 armed/fired/failed/not_fired/p50/p99/max=[19283 0 0 19283   ] silos active:dead=[4:0] restarts=0 fleans-core-3=410.5MiB fleans-core-1=337.9MiB fleans-core-2=358.3MiB
+10:44:03 armed/fired/failed/not_fired/p50/p99/max=[19283 335 0 18948 0.566 2.531 3.247] silos active:dead=[4:0] restarts=0 fleans-core-3=454MiB fleans-core-1=367.4MiB fleans-core-2=353.8MiB
+10:44:41 armed/fired/failed/not_fired/p50/p99/max=[19283 1871 0 17412 0.873 3.287 4.306] silos active:dead=[4:0] restarts=0 fleans-core-3=538.6MiB fleans-core-1=428.3MiB fleans-core-2=431.6MiB
+10:45:15 armed/fired/failed/not_fired/p50/p99/max=[19283 15598 0 3685 0.859 18.988 26.981] silos active:dead=[4:0] restarts=0 fleans-core-3=538.5MiB fleans-core-1=426.6MiB fleans-core-2=430.4MiB
+10:45:49 armed/fired/failed/not_fired/p50/p99/max=[19283 19283 0 0 1.185 19.765 27.678] silos active:dead=[4:0] restarts=0 fleans-core-3=537.7MiB fleans-core-1=427.2MiB fleans-core-2=431.8MiB
+core log dead/oom lines: 0

@@ -1,0 +1,47 @@
+time="2026-11-19T10:38:25Z" level=info msg="timers-1m: arming 20000 timers at 100/s for 200s; due 2026-11-19T10:43:42.512Z … +59 s" source=console
+time="2026-11-19T10:41:45Z" level=info msg="timers-1m: timers fall due until 2026-11-19T10:44:42.512Z. Wait ~1 minute past it, then run scripts/timers-1m-lag.sql against the fleans database (see tests/load/README.md § timers-1m)." source=console
+
+
+  █ THRESHOLDS 
+
+    http_req_failed
+    ✗ 'rate<0.01' rate=3.24%
+
+    timers_armed_late
+    ✓ 'rate<0.001' rate=0.00%
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 19932  97.991642/s
+    checks_succeeded...: 96.74% 19283 out of 19932
+    checks_failed......: 3.25%  649 out of 19932
+
+    ✗ timer instance start: status 200
+      ↳  96% — ✓ 19283 / ✗ 649
+
+    CUSTOM
+    timers_armed...................: 19283  94.800965/s
+    timers_armed_late..............: 0.00%  0 out of 19932
+    workflow_start_duration........: avg=48.401842 min=0.561549 med=23.416613 max=2389.196116 p(90)=63.038383 p(95)=100.855801
+
+    HTTP
+    http_req_duration..............: avg=48.42ms   min=561.54µs med=23.39ms   max=2.38s       p(90)=63ms      p(95)=100.85ms  
+      { expected_response:true }...: avg=49.8ms    min=11.64ms  med=23.68ms   max=2.38s       p(90)=64.06ms   p(95)=102.58ms  
+    http_req_failed................: 3.24%  649 out of 19992
+    http_reqs......................: 19992  98.28662/s
+
+    EXECUTION
+    dropped_iterations.............: 69     0.339225/s
+    iteration_duration.............: avg=48.8ms    min=783.69µs med=23.82ms   max=2.39s       p(90)=63.54ms   p(95)=101.29ms  
+    iterations.....................: 19932  97.991642/s
+    vus............................: 2      min=0            max=65
+    vus_max........................: 77     min=10           max=77
+
+    NETWORK
+    data_received..................: 5.7 MB 28 kB/s
+    data_sent......................: 3.4 MB 17 kB/s
+
+
+
+time="2026-11-19T10:41:45Z" level=error msg="thresholds on metrics 'http_req_failed' have been crossed"

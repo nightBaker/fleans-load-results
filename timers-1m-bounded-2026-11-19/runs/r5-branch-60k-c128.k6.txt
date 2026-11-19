@@ -1,0 +1,47 @@
+time="2026-11-19T11:37:54Z" level=info msg="timers-1m: arming 60000 timers at 120/s for 500s; due 2026-11-19T11:48:10.560Z … +59 s" source=console
+time="2026-11-19T11:46:14Z" level=info msg="timers-1m: timers fall due until 2026-11-19T11:49:10.560Z. Wait ~1 minute past it, then run scripts/timers-1m-lag.sql against the fleans database (see tests/load/README.md § timers-1m)." source=console
+time="2026-11-19T11:46:14Z" level=error msg="thresholds on metrics 'http_req_failed' have been crossed"
+
+
+  █ THRESHOLDS 
+
+    http_req_failed
+    ✗ 'rate<0.01' rate=2.06%
+
+    timers_armed_late
+    ✓ 'rate<0.001' rate=0.00%
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 59910  118.897901/s
+    checks_succeeded...: 97.93% 58670 out of 59910
+    checks_failed......: 2.06%  1240 out of 59910
+
+    ✗ timer instance start: status 200
+      ↳  97% — ✓ 58670 / ✗ 1240
+
+    CUSTOM
+    timers_armed...................: 58670 116.436986/s
+    timers_armed_late..............: 0.00% 0 out of 59910
+    workflow_start_duration........: avg=44.640989 min=0.540484 med=26.866304 max=3036.327577 p(90)=74.549863 p(95)=107.656784
+
+    HTTP
+    http_req_duration..............: avg=44.65ms   min=540.48µs med=26.85ms   max=3.03s       p(90)=74.49ms   p(95)=107.65ms  
+      { expected_response:true }...: avg=45.35ms   min=12.21ms  med=27.09ms   max=3.03s       p(90)=74.97ms   p(95)=108.41ms  
+    http_req_failed................: 2.06% 1240 out of 59970
+    http_reqs......................: 59970 119.016977/s
+
+    EXECUTION
+    dropped_iterations.............: 91    0.180599/s
+    iteration_duration.............: avg=45.08ms   min=770.59µs med=27.3ms    max=3.03s       p(90)=74.97ms   p(95)=108.28ms  
+    iterations.....................: 59910 118.897901/s
+    vus............................: 2     min=0             max=68
+    vus_max........................: 82    min=12            max=82
+
+    NETWORK
+    data_received..................: 17 MB 34 kB/s
+    data_sent......................: 10 MB 20 kB/s
+
+
+

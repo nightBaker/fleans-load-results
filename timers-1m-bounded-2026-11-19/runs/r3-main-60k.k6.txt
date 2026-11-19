@@ -1,0 +1,47 @@
+time="2026-11-19T10:46:52Z" level=info msg="timers-1m: arming 60000 timers at 120/s for 500s; due 2026-11-19T10:57:09.257Z … +59 s" source=console
+time="2026-11-19T10:55:12Z" level=info msg="timers-1m: timers fall due until 2026-11-19T10:58:09.257Z. Wait ~1 minute past it, then run scripts/timers-1m-lag.sql against the fleans database (see tests/load/README.md § timers-1m)." source=console
+time="2026-11-19T10:55:12Z" level=error msg="thresholds on metrics 'http_req_failed' have been crossed"
+
+
+  █ THRESHOLDS 
+
+    http_req_failed
+    ✗ 'rate<0.01' rate=1.40%
+
+    timers_armed_late
+    ✓ 'rate<0.001' rate=0.00%
+
+
+  █ TOTAL RESULTS 
+
+    checks_total.......: 59941  119.168735/s
+    checks_succeeded...: 98.59% 59099 out of 59941
+    checks_failed......: 1.40%  842 out of 59941
+
+    ✗ timer instance start: status 200
+      ↳  98% — ✓ 59099 / ✗ 842
+
+    CUSTOM
+    timers_armed...................: 59099 117.494755/s
+    timers_armed_late..............: 0.00% 0 out of 59941
+    workflow_start_duration........: avg=34.962445 min=0.523952 med=22.614446 max=1642.705277 p(90)=46.954234 p(95)=73.454929
+
+    HTTP
+    http_req_duration..............: avg=34.97ms   min=523.95µs med=22.6ms    max=1.64s       p(90)=46.95ms   p(95)=73.45ms  
+      { expected_response:true }...: avg=35.31ms   min=9.43ms   med=22.68ms   max=1.64s       p(90)=47.05ms   p(95)=73.61ms  
+    http_req_failed................: 1.40% 842 out of 60001
+    http_reqs......................: 60001 119.288021/s
+
+    EXECUTION
+    dropped_iterations.............: 59    0.117298/s
+    iteration_duration.............: avg=35.35ms   min=740.23µs med=22.98ms   max=1.64s       p(90)=47.47ms   p(95)=73.96ms  
+    iterations.....................: 59941 119.168735/s
+    vus............................: 1     min=0            max=63
+    vus_max........................: 65    min=12           max=65
+
+    NETWORK
+    data_received..................: 17 MB 34 kB/s
+    data_sent......................: 10 MB 20 kB/s
+
+
+
