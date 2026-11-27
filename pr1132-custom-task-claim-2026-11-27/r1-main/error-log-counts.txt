@@ -1,0 +1,4 @@
+fleans-core 2
+fleans-api 0
+fleans-worker 196
+external-worker 0
