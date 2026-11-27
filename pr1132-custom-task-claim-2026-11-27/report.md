@@ -13,6 +13,10 @@ control; `long-diverse` has one custom task among ~45 nodes.
 
 ## Summary
 
+> **Update:** #1132 now journals the claim in the batch that publishes the task (`11de149`); a
+> [re-run](#re-run-the-claim-journaled-with-the-publish-11de149) puts `one-task` back at `main`'s
+> journal writes, CPU and ceiling. The table below measures the first version (`b05c130`).
+
 | | `main` (r1, r2) | `pr` (r1, r2) | Δ (mean) |
 |---|---:|---:|---:|
 | `one-task` at 50 /s — p99 | 0.270 s, 0.247 s | 0.281 s, 0.349 s | +22 % |
@@ -91,12 +95,31 @@ rate is the comparison there.
 Per-round files: `<round>-<build>/onetask/` and `linear10/` (`*-summary.txt`, `*.cpu.txt`,
 `*.db.txt`), `long-diverse.summary.json`, `error-log-counts.txt`.
 
-## What would win the cost back
+## Re-run: the claim journaled with the publish (`11de149`)
 
-Ideas for #1132, not measured here:
+After the run above, #1132 moved the claim into the instance's own batch: `PublishCustomTask`
+journals `CustomTaskClaimed` for a reservation together with the activity's execution and sends that
+id with the task, and the dispatcher's first delivery takes it with `TakeCustomTask`, which writes
+nothing (a redelivered event or one from an earlier activation claims under a new id, as before).
+This re-run compares the three builds on `one-task` only, interleaved on fresh stacks
+([`scripts/all2.sh`](scripts/all2.sh), [`scripts/onetask-round.sh`](scripts/onetask-round.sh)).
+The VM restarted between the two runs, so compare within this table, not with the one above.
+`main` r1 is missing: Docker had just been restarted and that stack did not come up.
 
-- Write the claim in the same journal batch as the instance's step that dispatches the task (the
-  activity's `Executing` transition), instead of a separate dispatcher → instance call afterwards. That
-  removes the extra round trip and the extra transaction; the event's bytes remain.
-- Or keep the claim in the dispatcher grain's own state (one row per task, not in the instance journal):
-  it does not grow the journal, but needs its own storage write.
+| | `main` (r2, r3) | `pr2` = `11de149` (r1, r2, r3) | `pr` = `b05c130` (r1, r2) |
+|---|---:|---:|---:|
+| 50 /s — p99 | 0.265, 0.261 s | 0.263, 0.299, 0.295 s | 0.251, 0.297 s |
+| 100 /s — p50 | 0.211, 0.200 s | 0.225, 0.226, 0.188 s | 0.212, 0.259 s |
+| 100 /s — p99 | 0.600, 0.488 s | 0.597, 0.682, 0.491 s | 0.571, 0.915 s |
+| 150 /s offered — completed /s | 119.5, 126.9 | 129.9, 124.2, 128.1 | 117.0, 109.4 |
+| 200 /s offered — completed /s | 119.6, 140.9 | 148.2, 136.7, 146.9 | 108.9, 120.0 |
+| 100 /s — journal transactions per instance (w1 + w2) | 5.6, 5.7 | 5.7, 5.6, 5.7 | 6.6, 6.6 |
+| 100 /s — journal WAL per instance (w1 + w2) | 1.8, 1.8 KB | 1.9, 2.0, 2.0 KB | 2.2, 2.2 KB |
+| 100 /s — CPU of the Citus workers (w1 + w2) | 29.1 %, 29.1 % | 29.9 %, 31.1 %, 27.7 % | 33.2 %, 34.8 % |
+| Instances started and not completed | 0 | 0 | 0 |
+
+- **The cost is gone.** With the claim in the publish batch, `one-task` writes as many journal
+  transactions per instance as `main` (the claim adds ~0.1–0.2 KB of WAL to a batch that is written
+  anyway), the Citus workers use the same CPU, and the ceiling and latencies are within the
+  run-to-run spread of `main` — the separate claim (`pr`) is again the slowest at 150 and 200 /s.
+- Per-round files: `rerun/<round>-<build>/`.
