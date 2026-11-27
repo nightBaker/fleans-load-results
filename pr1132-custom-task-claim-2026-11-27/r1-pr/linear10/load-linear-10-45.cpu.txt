@@ -1,0 +1,13 @@
+fleans-core          101.6 %
+kafka                 40.1 %
+fleans-worker         35.8 %
+citus-coord           35.0 %
+citus-w2              16.8 %
+citus-w1              16.1 %
+postgres              13.0 %
+fleans-api            10.4 %
+postgres-replica       2.5 %
+nginx                  1.1 %
+postgres-ops           0.8 %
+external-worker        0.2 %
+total                273.2 %
